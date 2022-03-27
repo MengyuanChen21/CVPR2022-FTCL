@@ -12,7 +12,7 @@ IEEE/CVF Conference on Computer Vision and Pattern Recognition (**CVPR**), 2022.
 1. [Datasets](#datasets)
 1. [Testing](#testing)
 1. [Training](#training)
-1. [Pre-trained Model](#pre-trained model)
+1. [Model](#model)
 1. [Citation](#citation)
 
 ## Introduction
@@ -78,7 +78,7 @@ Note that we apply the [`wandb`](https://github.com/wandb/client) client to log 
 python main_thu.py --without_wandb
 ```
 
-## Pre-trained Model
+## Model
 
 The pre-trained model (checkpoint) of our FTCL-Net for the THUMOS-14 dataset can be downloaded from the [Google Drive]().
 
