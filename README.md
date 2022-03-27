@@ -16,7 +16,7 @@ Codes will be coming very soon!
 1. [Datasets](#datasets)
 1. [Testing](#testing)
 1. [Training](#training)
-1. [Pre-trained Model](#model)
+1. [Pre-trained Model](#pre-trained model)
 1. [Citation](#citation)
 
 ## Introduction
