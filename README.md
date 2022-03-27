@@ -16,7 +16,7 @@ Codes will be coming very soon!
 1. [Datasets](#datasets)
 1. [Testing](#testing)
 1. [Training](#training)
-1. [Pre-trained Model](#pre-trained model)
+1. [Model](#model)
 1. [Citation](#citation)
 
 ## Introduction
@@ -88,7 +88,7 @@ python main_act.py --batch_size 64
 
 You can configure your own hyper-parameters in `config/model_config.py` 
 
-## Pre-trained Model
+## Model
 
 The pre-trained model (checkpoint) for the THUMOS-14 dataset can be downloaded in the Google Drive.
 
