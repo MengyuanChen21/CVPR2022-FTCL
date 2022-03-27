@@ -5,10 +5,6 @@ Junyu Gao, Mengyuan Chen, Changsheng Xu
 
 IEEE/CVF Conference on Computer Vision and Pattern Recognition (**CVPR**), 2022.
 
-## Notice！！！
-
-Codes will be coming very soon!
-
 
 ## Table of Contents
 1. [Introduction](#introduction)
@@ -16,7 +12,7 @@ Codes will be coming very soon!
 1. [Datasets](#datasets)
 1. [Testing](#testing)
 1. [Training](#training)
-1. [Model](#model)
+1. [Pre-trained Model](#pre-trained model)
 1. [Citation](#citation)
 
 ## Introduction
@@ -48,11 +44,9 @@ pip install -r requirements.txt
 
 ## Datasets
 
-We use the 2048-d features provided by arXiv 2021 paper: ACM-Net Action Context Modeling Network for Weakly-Supervised Temporal Action Localization. You can get access of the dataset from 
+#### THUMOS14 Dataset：
 
-THUMOS14: [Google Drive](https://drive.google.com/drive/folders/1C4YG01X9IIT1a568wMM8fgm4k4xTC2EQ?usp=sharing) /  [Baidu Wangpan](https://pan.baidu.com/s/1rt8szoDspzJ5SjpcjccFXg) (pwd: vc21).
-
-ActivityNet-1.3: [Google Drive](https://drive.google.com/drive/folders/1B1srfie2UWKwaC4-7bo6UItmJoESCUq3?usp=sharing) /  [Baidu Wangpan](https://pan.baidu.com/s/1FB4vb8JSBkKqCGD_bqCtYg) (pwd: man7)
+We use the 2048-d features provided by arXiv 2021 paper: ACM-Net Action Context Modeling Network for Weakly-Supervised Temporal Action Localization. You can get access of the THUMOS14 dataset from [Google Drive](https://drive.google.com/drive/folders/1C4YG01X9IIT1a568wMM8fgm4k4xTC2EQ?usp=sharing) /  [Baidu Wangpan](https://pan.baidu.com/s/1rt8szoDspzJ5SjpcjccFXg) (pwd: vc21).
 
 Before running the code, please download the target dataset and unzip it under the `data/` folder.
 
@@ -61,12 +55,22 @@ Before running the code, please download the target dataset and unzip it under t
 To test your model, you can run following command:
 
 ```bash
-# For the THUMOS-14 datasets.
+# For the THUMOS-14 dataset.
 python main_thu.py --test --checkpoint $checkpoint_path
-
-# For the ActivityNet-1.3 datasets.
-python main_act.py --test --checkpoint $checkpoint_path
 ```
+
+## Training
+
+In order to reduce the training time, we utilize a pre-trained model produced by the backbone network ACM-Net to initialize our FTCL-Net, which can be accessed [here](). For how to produce the initialization network, please see [ACM-Net](https://github.com/ispc-lab/ACM-Net).
+
+You can train your own model by running:
+
+```bash
+# For the THUMOS-14 dataset.
+python main_thu.py --batch_size 16 --checkpoint $initialization_network_path
+```
+
+You can configure your own hyper-parameters in `config/model_config.py` .
 
 Note that we apply the [`wandb`](https://github.com/wandb/client) client to log the experiments, if you don't want to use this tool, you can disable it in the command with   `--without_wandb` like 
 
@@ -74,23 +78,9 @@ Note that we apply the [`wandb`](https://github.com/wandb/client) client to log 
 python main_thu.py --without_wandb
 ```
 
-## Training
+## Pre-trained Model
 
-You can train your own model by running:
-
-```bash
-# For the THUMOS-14 datasets.
-python main_thu.py --batch_size 16
-
-# For the ActivityNet-1.3 datasets.
-python main_act.py --batch_size 64
-```
-
-You can configure your own hyper-parameters in `config/model_config.py` 
-
-## Model
-
-The pre-trained model (checkpoint) for the THUMOS-14 dataset can be downloaded in the Google Drive.
+The pre-trained model (checkpoint) of our FTCL-Net for the THUMOS-14 dataset can be downloaded from the [Google Drive]().
 
 ## Citation
 If you find the code useful in your research, please cite:
