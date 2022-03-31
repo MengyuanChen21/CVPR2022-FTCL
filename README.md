@@ -52,7 +52,7 @@ We utilize a pre-trained model produced by the backbone network [ACM-Net](https:
 python main_thu.py --group baseline --model_name acmnet --epochs 500
 ```
 
-Note: According to our experiments, results of ACM-Net are very sensitive to the selection of random seeds. Before training the FTCL network, it should be guaranteed that ACM-Net can achieve the result (42.6% mAP@Avg) reported in its paper under the current random seed.
+Note: According to our experiments, the training of ACM-Net is not very stable with different random seeds. Therefore, before training the FTCL network, it should be guaranteed that ACM-Net can achieve the result (42.6% mAP@Avg) reported in its paper under the current random seed.
 
 Utilizing the trained ACM-Net model as the checkpoint, you can then train your own FTCL model by running:
 
@@ -78,7 +78,7 @@ If you find the code useful in your research, please cite:
     @inproceedings{junyu2022CVPR_FTCL,
       author = "Gao, Junyu and Chen, Mengyuan and Xu, Changsheng",
       title = "Fine-grained Temporal Contrastive Learning for Weakly-supervised Temporal Action Localization",
-      booktitle = "IEEE/CVF Conference on Computer Vision and Pattern Recognition",
+      booktitle = "IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR)",
       year = "2022"
     }
 
