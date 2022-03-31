@@ -8,8 +8,7 @@ IEEE/CVF Conference on Computer Vision and Pattern Recognition (**CVPR**), 2022.
 
 ## Table of Contents
 1. [Introduction](#introduction)
-1. [Installation](#installation)
-1. [Datasets](#datasets)
+1. [Preparation](#preparation)
 1. [Testing](#testing)
 1. [Training](#training)
 1. [Model](#model)
@@ -18,56 +17,47 @@ IEEE/CVF Conference on Computer Vision and Pattern Recognition (**CVPR**), 2022.
 ## Introduction
 We target at the task of weakly-supervised action localization (WSAL), where only video-level action labels are available during model training. Despite the recent progress, existing methods mainly embrace a localization-by-classification paradigm and overlook the fruitful fine-grained temporal distinctions between video sequences, thus suffering from severe ambiguity in classification learning and classification-to-localization adaption. This paper argues that learning by contextually comparing sequence-to-sequence distinctions offers an essential inductive bias in WSAL and helps identify coherent action instances. Specifically, under a differentiable dynamic programming formulation, two complementary contrastive objectives are designed, including Fine-grained Sequence Distance (FSD) contrasting and Longest Common Subsequence (LCS) contrasting, where the first one considers the relations of various action/background proposals by using match, insert, and delete operators and the second one mines the longest common subsequences between two videos. Both contrasting modules can enhance each other and jointly enjoy the merits of discriminative action-background separation and alleviated task gap between classification and localization. Extensive experiments show that our method achieves state-of-the-art performance on three popular benchmarks.
 
-<!-- <div align="center">
-  <img src="figs/arch.pdf" width="800px"/><br>
-    Overview of the FTCL
-</div> -->
+![avatar](./figs/arch.png)
 
-## Preparations
+## Preparation
 ### Requirements and Dependencies
-Here we only list our used requirements and dependencies. It would be great if you can work around with the latest versions of the listed softwares and hardwares.
+Here we list our used requirements and dependencies.
  - Linux: Ubuntu 20.04 LTS
  - GPU: GeForce RTX 3090
- - CUDA: 11.4
- - GCC: 9.4.0
+ - CUDA: 11.1
  - Python: 3.7.11
- - Anaconda: 4.10.1
  - PyTorch: 1.9.0
+ - Numpy: 1.20.3
+ - Pandas: 1.3.1
+ - Scikit-learn: 0.24.2
+ - Wandb: 0.11.1 
 
-### Installation
-
-Required packages are listed in [requirements.txt](/requirements.txt). You can install by running:
-
-```
-pip install -r requirements.txt
-```
-
-## Datasets
-
-#### THUMOS14 Dataset：
+### THUMOS14 Dataset：
 
 We use the 2048-d features provided by arXiv 2021 paper: ACM-Net Action Context Modeling Network for Weakly-Supervised Temporal Action Localization. You can get access of the THUMOS14 dataset from [Google Drive](https://drive.google.com/drive/folders/1C4YG01X9IIT1a568wMM8fgm4k4xTC2EQ?usp=sharing) /  [Baidu Wangpan](https://pan.baidu.com/s/1rt8szoDspzJ5SjpcjccFXg) (pwd: vc21).
-
-Before running the code, please download the target dataset and unzip it under the `data/` folder.
 
 ## Testing
 
 To test your model, you can run following command:
 
 ```bash
-# For the THUMOS-14 dataset.
 python main_thu.py --test --checkpoint $checkpoint_path
 ```
 
 ## Training
 
-In order to reduce the training time, we utilize a pre-trained model produced by the backbone network ACM-Net to initialize our FTCL-Net, which can be accessed [here](). For how to produce the initialization network, please see [ACM-Net](https://github.com/ispc-lab/ACM-Net).
-
-You can train your own model by running:
+We utilize a pre-trained model produced by the backbone network [ACM-Net](https://github.com/ispc-lab/ACM-Net) to initialize our FTCL-Net. The ACM-Net can be accessed by running the following command:
 
 ```bash
-# For the THUMOS-14 dataset.
-python main_thu.py --batch_size 16 --checkpoint $initialization_network_path
+python main_thu.py --group baseline --model_name acmnet --epochs 500
+```
+
+Note: According to our experiments, results of ACM-Net are very sensitive to the selection of random seeds. Before training the FTCL network, it should be guaranteed that ACM-Net can achieve the result (42.6% mAP@Avg) reported in its paper under the current random seed.
+
+Utilizing the trained ACM-Net model as the checkpoint, you can then train your own FTCL model by running:
+
+```bash
+python main_thu.py --group ftcl --model_name ftcl --checkpoint /path/to/THUMOS-14/save/baseline/acmnet/THUMOS_best.pth --ftcl
 ```
 
 You can configure your own hyper-parameters in `config/model_config.py` .
@@ -75,12 +65,12 @@ You can configure your own hyper-parameters in `config/model_config.py` .
 Note that we apply the [`wandb`](https://github.com/wandb/client) client to log the experiments, if you don't want to use this tool, you can disable it in the command with   `--without_wandb` like 
 
 ```bash
-python main_thu.py --without_wandb
+python main_thu.py --ftcl --without_wandb
 ```
 
 ## Model
 
-The pre-trained model (checkpoint) of our FTCL-Net for the THUMOS-14 dataset can be downloaded from the [Google Drive]().
+The pre-trained model (checkpoint) of our FTCL-Net for the THUMOS-14 dataset can be downloaded from the [Google Drive](https://drive.google.com/file/d/1DDPFx0lENZuwIsdP5abARc9FVEaWy1bV/view?usp=sharing).
 
 ## Citation
 If you find the code useful in your research, please cite:

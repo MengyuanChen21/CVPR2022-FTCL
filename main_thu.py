@@ -10,9 +10,11 @@ import numpy as np
 from torch.utils.data import DataLoader
 
 from config.model_config import build_args
-from dataset.dataset_class import build_test_dataset, build_train_dataset
+from dataset.dataset_class import build_dataset, build_ftcl_dataset
+from model.ACMNet import ACMNet
 from model.FTCLNet import FTCLNet
-from utils.criterion import FTCLLoss
+from utils.net_utils import ACMLoss
+from utils.ftcl_criterion import FTCLLoss
 
 from train_thu import train
 from test_thu import test
@@ -44,7 +46,10 @@ def main(args):
     if not os.path.isdir(save_dir):
         os.makedirs(save_dir)
 
-    model = FTCLNet(args)
+    if args.ftcl:
+        model = FTCLNet(args)
+    else:
+        model = ACMNet(args)
     if args.checkpoint is not None and os.path.isfile(args.checkpoint):
         checkpoint = torch.load(args.checkpoint, map_location=torch.device("cpu"))
         model.load_state_dict(checkpoint["model_state_dict"], strict=False)
@@ -61,21 +66,31 @@ def main(args):
 
         optimizer = torch.optim.Adam(model.parameters(), lr=args.lr,
                                      betas=(0.9, 0.999), weight_decay=args.weight_decay)
+        # optimizer = torch.optim.Adam(filter(lambda p: p.requires_grad, model.parameters()), lr=args.lr,
+        #                              betas=(0.9, 0.999), weight_decay=args.weight_decay)
 
-        test_dataset = build_test_dataset(args, phase="test", sample="uniform")
+        train_dataset = build_dataset(args, phase="train", sample="random")
+        test_dataset = build_dataset(args, phase="test", sample="uniform")
+
+        train_dataloader = DataLoader(train_dataset, batch_size=args.batch_size, shuffle=True,
+                                      num_workers=args.num_workers, drop_last=False)
+
         test_dataloader = DataLoader(test_dataset, batch_size=1, shuffle=False,
                                      num_workers=args.num_workers, drop_last=False)
 
-        train_dataset = build_train_dataset(args, phase="train", sample="random")
-        train_dataloader = DataLoader(train_dataset, batch_size=args.batch_size, shuffle=True,
-                                      num_workers=args.num_workers, drop_last=False)
-        criterion = FTCLLoss(args)
+        ftcl_dataset = build_ftcl_dataset(args, phase="train", sample="random")
+        ftcl_dataloader = DataLoader(ftcl_dataset, batch_size=args.batch_size, shuffle=True,
+                                     num_workers=args.num_workers, drop_last=False)
+        if args.ftcl:
+            criterion = FTCLLoss(args)
+        else:
+            criterion = ACMLoss(args)
 
         best_test_mAP = 0
 
         for epoch_idx in tqdm(range(args.start_epoch, args.epochs)):
 
-            train_log_dict = train(args, model, train_dataloader, criterion, optimizer)
+            train_log_dict = train(args, model, train_dataloader, ftcl_dataloader, criterion, optimizer)
 
             if epoch_idx >= args.start_test_epoch:
                 with torch.no_grad():
@@ -111,13 +126,14 @@ def main(args):
                     wandb.log({"best_test_mAP": best_test_mAP})
 
     else:
-        test_dataset = build_test_dataset(args, phase="test", sample="uniform")
+        test_dataset = build_dataset(args, phase="test", sample="uniform")
         test_dataloader = DataLoader(test_dataset, batch_size=1, shuffle=False,
                                      num_workers=args.num_workers, drop_last=False)
-        criterion = FTCLLoss(args)
+        criterion = ACMLoss(args)
 
         with torch.no_grad():
             test_log_dict, test_tmp_data_log_dict = test(args, model, test_dataloader, criterion)
+            test_mAP = test_log_dict["test_mAP"]
 
             with open(os.path.join(save_dir, "test_tmp_data_log_dict.pickle"), "wb") as f:
                 pickle.dump(test_tmp_data_log_dict, f)

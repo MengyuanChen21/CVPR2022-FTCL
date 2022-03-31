@@ -39,10 +39,16 @@ def test(args, model, dataloader, criterion):
         t_factor = (args.segment_frames_num * vid_len) / (
                 args.frames_per_sec * args.test_upgrade_scale * input_feature.shape[1])
 
-        act_inst_cls, act_cont_cls, act_back_cls, \
-        act_inst_feat, act_cont_feat, act_back_feat, \
-        temp_att, act_inst_cas, act_cas, act_cont_cas, act_back_cas,\
-        lcs_candi, fsd_act_candi, fsd_bak_candi = model(input_feature)
+        if args.ftcl:
+            act_inst_cls, act_cont_cls, act_back_cls, \
+            act_inst_feat, act_cont_feat, act_back_feat, \
+            temp_att, act_inst_cas, act_cas, act_cont_cas, act_back_cas, \
+            lcs_candi, fsd_act_candi, fsd_bak_candi = model(False, input_feature)
+        else:
+            act_inst_cls, act_cont_cls, act_back_cls, \
+            act_inst_feat, act_cont_feat, act_back_feat, \
+            temp_att, act_inst_cas, act_cas, act_cont_cas, act_back_cas,\
+            lcs_candi, fsd_act_candi, fsd_bak_candi = model(input_feature)
 
         loss, loss_dict = criterion(act_inst_cls, act_cont_cls, act_back_cls, vid_label_t, temp_att,
                                     act_inst_feat, act_cont_feat, act_back_feat, act_inst_cas,
