@@ -1,7 +1,5 @@
 import torch
 import torch.nn as nn
-import math
-import numpy as np
 
 
 class FTCLNet(nn.Module):
@@ -125,9 +123,9 @@ class FTCLNet(nn.Module):
                temp_att, act_inst_cas, act_cas, act_cont_cas, act_back_cas, \
                lcs_candi, fsd_act_candi, fsd_bak_candi
 
-    def forward(self, input_1, input_2=None):
+    def forward(self, ftcl, input_1, input_2=None):
 
-        if input_2 is None:
+        if not ftcl:
             return self.forward_once(input_1)
 
         else:

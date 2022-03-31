@@ -53,7 +53,7 @@ def consecutive_sample(input_feature, sample_len):
         return np.concatenate((input_feature, empty_features), axis=0)
 
 
-class TestDataset(Dataset):
+class ACMDataset(Dataset):
 
     def __init__(self, args, phase="train", sample="random"):
 
@@ -121,15 +121,15 @@ class TestDataset(Dataset):
             return vid_name, con_vid_spd_feature, vid_label_t, vid_len, vid_duration
 
 
-def build_test_dataset(args, phase="train", sample="random"):
-    return TestDataset(args, phase, sample)
+def build_dataset(args, phase="train", sample="random"):
+    return ACMDataset(args, phase, sample)
 
 
-def build_train_dataset(args, phase="train", sample="random"):
-    return TrainDataset(args, phase, sample)
+def build_ftcl_dataset(args, phase="train", sample="random"):
+    return FTCLDataset(args, phase, sample)
 
 
-class TrainDataset(Dataset):
+class FTCLDataset(Dataset):
 
     def __init__(self, args, phase="train", sample="random"):
 
@@ -198,13 +198,7 @@ class TrainDataset(Dataset):
                 elif np.sum(label_0 * label_1) == 0:
                     self.neg_pair_list.append([i, j])
 
-        # print('len of neg_pair_list:', len(self.neg_pair_list))
-        # 18772
-        # print('len of pos_pair_list:', len(self.pos_pair_list))
-        # 861
-
         self.neg_pair_list = random.sample(self.neg_pair_list, len(self.pos_pair_list))
-
         self.neg_pair_list.extend(self.pos_pair_list)
         self.pair_list = self.neg_pair_list
 

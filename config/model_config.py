@@ -75,8 +75,8 @@ _DATASET_HYPER_PARAMS = {
         "action_cls_num": len(_CLASS_NAME["THUMOS"]),
         "cls_threshold": 0.25,
         "test_upgrade_scale": 20,
-        "data_dir": "path/to/THUMOS14",
-        "test_gt_file": "path/to/THUMOS14/gt.json",
+        "data_dir": "/path/to/THUMOS-14",
+        "test_gt_file": "/path/to/THUMOS-14/gt.json",
         "tiou_thresholds": np.arange(0.1, 1.00, 0.10),
         "nms_thresh": 0.55,
 
@@ -102,8 +102,8 @@ _DATASET_HYPER_PARAMS = {
         "action_cls_num": len(_CLASS_NAME["ActivityNet"]),
         "cls_threshold": 0.10,
         "test_upgrade_scale": 20,
-        "data_dir": "path/to/ActivityNet13",
-        "test_gt_file": "path/to/ActivityNet13/gt.json",
+        "data_dir": "path/to/ActivityNet-13",
+        "test_gt_file": "path/to/ActivityNet-13/gt.json",
         "tiou_thresholds": np.arange(0.50, 1.00, 0.05),
         "nms_thresh": 0.90,
 
@@ -144,6 +144,7 @@ def build_args(dataset=None):
 
     parser.add_argument("--without_wandb", action="store_true")
     parser.add_argument("--test", action="store_true")
+    parser.add_argument("--ftcl", action="store_true")
 
     parser.add_argument("--without_lcs", action="store_true")
     parser.add_argument("--without_fsd", action="store_true")
