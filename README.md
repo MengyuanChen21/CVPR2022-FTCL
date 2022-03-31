@@ -76,10 +76,10 @@ The pre-trained model (checkpoint) of our FTCL-Net for the THUMOS-14 dataset can
 If you find the code useful in your research, please cite:
 
     @inproceedings{junyu2022CVPR_FTCL,
-      author = "Gao, Junyu and Chen, Mengyuan and Xu, Changsheng",
-      title = "Fine-grained Temporal Contrastive Learning for Weakly-supervised Temporal Action Localization",
-      booktitle = "IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR)",
-      year = "2022"
+      author = {Gao, Junyu and Chen, Mengyuan and Xu, Changsheng},
+      title = {Fine-grained Temporal Contrastive Learning for Weakly-supervised Temporal Action Localization},
+      booktitle = {IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR)},
+      year = {2022}
     }
 
 ## License
